@@ -1,15 +1,40 @@
 import ImageCardSlider from "../components/ImageCardSlider";
+import InfoCard from "../components/InfoCard";
+import ContactSection from "../components/ContactSection";
 
 export default function Home() {
+  const cards = [
+    {
+      title: "Servicio 1",
+      text: "Texto referente a lo que se refiere el logo.",
+      imgSrc: "", // luego pones tu logo aquí (o déjalo vacío)
+    },
+    {
+      title: "Servicio 2",
+      text: "Texto referente a lo que se refiere el logo.",
+      imgSrc: "",
+    },
+    {
+      title: "Servicio 3",
+      text: "Texto referente a lo que se refiere el logo.",
+      imgSrc: "",
+    },
+  ];
+
   return (
     <div style={{ margin: 0, padding: 0 }}>
-      <div style={{ margin: 0, padding: 0 }}>
-        <ImageCardSlider />
-      </div>
+      <ImageCardSlider />
 
-      <div style={{ padding: "30px" }}>
-        <h1 style={{ marginTop: 0 }}>Bienvenido a AAC WEB</h1>
+      <div className="home-content">
+        <h1>Bienvenido a AAC WEB</h1>
         <p>Esta es tu página principal.</p>
+
+        <section className="cards-grid">
+          {cards.map((c, idx) => (
+            <InfoCard key={idx} title={c.title} text={c.text} imgSrc={c.imgSrc} />
+          ))}
+        </section>
+        <ContactSection />
       </div>
     </div>
   );
