@@ -1,10 +1,11 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import styles from "./NavbarStyles";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setOpen(false);
@@ -17,9 +18,13 @@ export default function Navbar() {
     fontWeight: isActive ? 700 : 500,
   });
 
-  const scrollToContact = () => {
-    const el = document.getElementById("contact");
-    if (el) el.scrollIntoView({ behavior: "smooth" });
+  const goToContact = () => {
+    if (location.pathname === "/") {
+      const el = document.getElementById("contact");
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    } else {
+      navigate("/", { state: { scrollToContact: true } });
+    }
   };
 
   return (
@@ -34,9 +39,8 @@ export default function Navbar() {
           <Link to="/about" style={linkStyle(location.pathname === "/about")}>About</Link>
           <Link to="/aprender" style={linkStyle(location.pathname === "/aprender")}>Aprender</Link>
 
-          {/* Contact: baja a la sección en la misma página */}
           <button
-            onClick={scrollToContact}
+            onClick={goToContact}
             style={{
               background: "transparent",
               border: "none",
@@ -70,9 +74,8 @@ export default function Navbar() {
           <Link to="/about" style={styles.mobileLink}>About</Link>
           <Link to="/aprender" style={styles.mobileLink}>Aprender</Link>
 
-          {/* Contact en móvil */}
           <button
-            onClick={scrollToContact}
+            onClick={goToContact}
             style={{
               background: "transparent",
               border: "none",
