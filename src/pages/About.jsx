@@ -12,8 +12,9 @@ export default function About() {
         <div className={styles.boxText}>
           <h2>¿Quiénes somos?</h2>
           <p>
-            En AAC WEB buscamos ayudar a las personas a mejorar sus hábitos de ahorro
-            y tomar mejores decisiones financieras mediante contenido educativo sencillo.
+          Ser un referente en educación financiera juvenil a través de plataformas digitales. 
+          Formar jóvenes conscientes y preparados para manejar su dinero de manera responsable. 
+          Impulsar una educación inclusiva y de calidad mediante herramientas innovadoras.
           </p>
         </div>
       </section>
@@ -23,8 +24,9 @@ export default function About() {
         <div className={styles.boxText}>
           <h2>Nuestra misión</h2>
           <p>
-            Proveer herramientas claras para que cualquier persona pueda organizar sus finanzas,
-            ahorrar constantemente y lograr sus metas económicas.
+          Somos un proyecto educativo digital que promueve la educación financiera en jóvenes de 15 a 18 años. 
+          Brindamos contenidos prácticos y dinámicos sobre ahorro, presupuesto y consumo responsable. 
+          Usamos herramientas digitales para facilitar el aprendizaje aplicado a la vida diaria.
           </p>
         </div>
 
@@ -41,8 +43,9 @@ export default function About() {
         <div className={styles.boxText}>
           <h2>Nuestro compromiso</h2>
           <p>
-            Estamos comprometidos en construir contenidos accesibles, prácticos y útiles
-            para que nuestros usuarios tengan un verdadero impacto en su día a día.
+          Ofrecer educación financiera clara, accesible y entretenida para los jóvenes. 
+          Fomentar el aprendizaje activo mediante retos prácticos y contenidos digitales. 
+          Contribuir a la formación de decisiones económicas responsables.
           </p>
         </div>
 
