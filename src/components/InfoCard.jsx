@@ -1,9 +1,14 @@
 export default function InfoCard({ title, text, imgSrc }) {
   return (
     <article className="info-card">
+      
       <div className="info-card__img">
         {imgSrc ? (
-          <img src={imgSrc} alt={title} />
+          <img 
+            src={imgSrc} 
+            alt={title} 
+            className="info-card-img"
+          />
         ) : (
           <span>Imagen (logo)</span>
         )}
@@ -13,6 +18,7 @@ export default function InfoCard({ title, text, imgSrc }) {
         <h3 className="info-card__title">{title}</h3>
         <p className="info-card__text">{text}</p>
       </div>
+
     </article>
   );
 }

@@ -21,19 +21,19 @@ export default function Home() {
 
   const cards = [
     {
-      title: "Servicio 1",
-      text: "Texto referente a lo que se refiere el logo.",
-      imgSrc: "",
+      title: "Aprende",
+      text: "Educación financiera básica para comprender el manejo del dinero desde temprana edad.",
+      imgSrc: "/img/7.jpeg",
     },
     {
-      title: "Servicio 2",
-      text: "Texto referente a lo que se refiere el logo.",
-      imgSrc: "",
+      title: "Ahorra",
+      text: "Herramientas prácticas para el ahorro, presupuesto y control de gastos.",
+      imgSrc: "/img/8.jpeg",
     },
     {
-      title: "Servicio 3",
-      text: "Texto referente a lo que se refiere el logo.",
-      imgSrc: "",
+      title: "Crece",
+      text: "Formación de hábitos financieros responsables para el futuro.",
+      imgSrc: "/img/9.jpeg",
     },
   ];
 

@@ -259,3 +259,51 @@ body {
     grid-template-columns: 1fr;
   }
 }
+/* --- InfoCards: que se vean como tu 1ra imagen + sin marcos --- */
+
+.info-card {
+  border: none !important;        /* quita marco general */
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+/* Bloque de la imagen: sin borde y más alto (como la 1ra imagen) */
+.info-card__img {
+  border: none !important;        /* quita marco de la imagen */
+  background: transparent !important;
+  height: 320px;                  /* AJUSTA: 300-360 según te guste */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* La imagen/logo: NO usar cover porque aplasta/recorta.
+   Mejor "contain" para que se vea completo. */
+.info-card-img,
+.info-card__img img {
+  width: 90%;
+  height: 90%;
+  object-fit: contain;            /* clave para que no se deforme */
+  display: block;
+}
+
+/* Bloque del texto: sin caja ni borde */
+.info-card__body {
+  border: none !important;
+  background: transparent !important;
+  padding: 18px 0 0;              /* un poco de separación */
+  text-align: center;             /* como se ve en tu 1ra imagen */
+}
+
+/* (Opcional) títulos/textos */
+.info-card__title {
+  margin: 0 0 10px;
+  font-weight: 800;
+}
+
+.info-card__text {
+  margin: 0;
+  opacity: 0.9;
+  line-height: 1.5;
+}

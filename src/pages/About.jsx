@@ -5,9 +5,13 @@ export default function About() {
     <div className={styles.page}>
       {/* Fila 1 */}
       <section className={styles.row}>
-        <div className={styles.boxImg}>
-          <span>IMAGEN</span>
-        </div>
+      <div className={styles.boxImg}>
+        <img 
+          src="/img/4.jpeg" 
+          alt="Educación financiera juvenil"
+          className={styles.img}
+        />
+      </div>
 
         <div className={styles.boxText}>
           <h2>¿Quiénes somos?</h2>
@@ -31,14 +35,22 @@ export default function About() {
         </div>
 
         <div className={styles.boxImg}>
-          <span>IMAGEN</span>
+          <img 
+            src="/img/5.jpeg" 
+            alt="Aprendizaje digital"
+            className={styles.img}
+          />
         </div>
       </section>
 
       {/* Fila 3 — Imagen derecha, texto izquierda */}
       <section className={styles.row}>
       <div className={styles.boxImg}>
-          <span>IMAGEN</span>
+          <img 
+            src="/img/6.jpeg" 
+            alt="Compromiso educativo"
+            className={styles.img}
+          />
         </div>
         <div className={styles.boxText}>
           <h2>Nuestro compromiso</h2>
