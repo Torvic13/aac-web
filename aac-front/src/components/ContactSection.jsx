@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import styles from "./ContactSection.module.css";
 
 export default function ContactSection() {
   const [form, setForm] = useState({
@@ -10,18 +11,29 @@ export default function ContactSection() {
 
   const [status, setStatus] = useState({ type: "", msg: "" });
   const [loading, setLoading] = useState(false);
+  const timerRef = useRef(null);
 
   const onChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  const showToast = (type, msg, ms = 3000) => {
+    setStatus({ type, msg });
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => setStatus({ type: "", msg: "" }), ms);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
+
   const onSubmit = async (e) => {
     e.preventDefault();
-    setStatus({ type: "", msg: "" });
 
-    // validación mínima
     if (!form.nombre || !form.correo || !form.mensaje) {
-      setStatus({ type: "error", msg: "Completa Nombre, Correo y Mensaje." });
+      showToast("error", "Completa Nombre, Correo y Mensaje.");
       return;
     }
 
@@ -37,78 +49,94 @@ export default function ContactSection() {
       const data = await res.json();
 
       if (!res.ok) {
-        setStatus({ type: "error", msg: data.message || "Error al enviar." });
+        showToast("error", data.message || "Error al enviar.");
         return;
       }
 
-      setStatus({ type: "ok", msg: "Mensaje enviado ✅" });
+      showToast("ok", "Mensaje enviado correctamente ✅");
       setForm({ nombre: "", correo: "", celular: "", mensaje: "" });
     } catch (err) {
-      setStatus({ type: "error", msg: "No se pudo conectar al servidor." });
+      showToast("error", "No se pudo conectar con el servidor.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <section id="contact" className="contact-section">
-      <h2>Contáctanos</h2>
-      <p>Déjanos tus datos y te responderemos lo antes posible.</p>
+    <section id="contact" className={styles.contactSection}>
+      <div className={styles.contactGrid}>
+        {/* Imagen lado izquierdo */}
+        <div className={styles.contactImage}>
+          {/* Cuando quieras poner imagen real, descomenta esto: */}
+          {/* <img src="/img/tu-imagen.jpg" alt="Contacto" /> */}
+          <span>Imagen</span>
+        </div>
 
-      <form onSubmit={onSubmit} className="contact-form">
-        <label>
-          Nombre
-          <input
-            name="nombre"
-            value={form.nombre}
-            onChange={onChange}
-            placeholder="Tu nombre"
-          />
-        </label>
+        {/* Formulario */}
+        <div className={styles.contactFormWrap}>
+          <h2>Contáctanos</h2>
+          <p>Déjanos tus datos y te responderemos lo antes posible.</p>
 
-        <label>
-          Correo
-          <input
-            name="correo"
-            type="email"
-            value={form.correo}
-            onChange={onChange}
-            placeholder="tu@correo.com"
-          />
-        </label>
+          <form onSubmit={onSubmit} className={styles.contactForm}>
+            <label>
+              Nombre
+              <input
+                name="nombre"
+                value={form.nombre}
+                onChange={onChange}
+                placeholder="Tu nombre"
+              />
+            </label>
 
-        <label>
-          Celular
-          <input
-            name="celular"
-            value={form.celular}
-            onChange={onChange}
-            placeholder="+51 999 999 999"
-          />
-        </label>
+            <label>
+              Correo
+              <input
+                name="correo"
+                type="email"
+                value={form.correo}
+                onChange={onChange}
+                placeholder="tu@correo.com"
+              />
+            </label>
 
-        <label>
-          Mensaje
-          <textarea
-            name="mensaje"
-            value={form.mensaje}
-            onChange={onChange}
-            placeholder="Cuéntanos en qué te ayudamos..."
-            rows={5}
-          />
-        </label>
+            <label>
+              Celular
+              <input
+                name="celular"
+                value={form.celular}
+                onChange={onChange}
+                placeholder="+51 999 999 999"
+              />
+            </label>
 
-        <button type="submit" disabled={loading}>
-          {loading ? "Enviando..." : "Enviar"}
-        </button>
+            <label>
+              Mensaje
+              <textarea
+                name="mensaje"
+                value={form.mensaje}
+                onChange={onChange}
+                placeholder="Cuéntanos en qué te ayudamos..."
+                rows={5}
+              />
+            </label>
 
-        {status.msg && (
-          <p style={{ marginTop: 12, opacity: 0.9 }}>
-            {status.type === "error" ? "❌ " : "✅ "}
-            {status.msg}
-          </p>
-        )}
-      </form>
+            <button type="submit" disabled={loading}>
+              {loading ? "Enviando..." : "Enviar"}
+            </button>
+          </form>
+        </div>
+      </div>
+
+      {/* Toast flotante */}
+      {status.msg && (
+        <div
+          className={`${styles.toast} ${
+            status.type === "error" ? styles.toastError : styles.toastOk
+          }`}
+        >
+          {status.msg}
+        </div>
+      )}
     </section>
   );
 }
