@@ -2,68 +2,56 @@ import express from "express";
 import cors from "cors";
 import "dotenv/config";
 import mongoose from "mongoose";
-import Contact from "./models/Contact.js";
+
+import authRoutes from "./routes/auth.routes.js";
+import contactRoutes from "./routes/contact.routes.js";
 
 const app = express();
 
-// Permitir requests desde tu frontend
+// Validaciones de ENV
+if (!process.env.MONGO_URI) {
+  console.error("❌ Falta MONGO_URI en .env");
+  process.exit(1);
+}
+if (!process.env.JWT_SECRET) {
+  console.error("❌ Falta JWT_SECRET en .env");
+  process.exit(1);
+}
+
+// Middlewares
 app.use(
   cors({
     origin: "http://localhost:3000",
+    credentials: true,
   })
 );
 
 app.use(express.json());
 
-// Conectar a MongoDB Atlas
-async function connectDB() {
+// Health
+app.get("/api/health", (req, res) => {
+  res.json({ ok: true, message: "Backend AAC WEB funcionando ✅" });
+});
+
+// Routes
+app.use("/api/auth", authRoutes);
+app.use("/api", contactRoutes);
+
+// Mongo + Start Server
+const PORT = process.env.PORT || 4000;
+
+async function start() {
   try {
     await mongoose.connect(process.env.MONGO_URI);
     console.log("✅ MongoDB Atlas conectado");
+
+    app.listen(PORT, () => {
+      console.log(`✅ Backend corriendo en http://localhost:${PORT}`);
+    });
   } catch (error) {
     console.error("❌ Error conectando MongoDB:", error.message);
     process.exit(1);
   }
 }
 
-// Rutas
-app.get("/api/health", (req, res) => {
-  res.json({ ok: true, message: "Backend AAC WEB funcionando ✅" });
-});
-
-app.post("/api/contact", async (req, res) => {
-  try {
-    const { nombre, correo, celular, mensaje } = req.body;
-
-    if (!nombre || !correo || !mensaje) {
-      return res.status(400).json({
-        ok: false,
-        message: "Faltan campos obligatorios: nombre, correo, mensaje",
-      });
-    }
-
-    const saved = await Contact.create({ nombre, correo, celular, mensaje });
-
-    return res.status(201).json({
-      ok: true,
-      message: "Contacto guardado ✅",
-      id: saved._id,
-    });
-  } catch (error) {
-    console.error("❌ Error guardando contacto:", error.message);
-    return res.status(500).json({
-      ok: false,
-      message: "Error guardando contacto",
-    });
-  }
-});
-
-
-// Iniciar servidor SOLO si Mongo conecta
-const PORT = process.env.PORT || 4000;
-
-connectDB().then(() => {
-  app.listen(PORT, () => {
-    console.log(`✅ Backend corriendo en http://localhost:${PORT}`);
-  });
-});
+start();
