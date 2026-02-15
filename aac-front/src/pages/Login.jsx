@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import styles from "./Login.module.css";
 
 export default function Login() {
   const [form, setForm] = useState({ username: "", password: "" });
@@ -23,16 +24,11 @@ export default function Login() {
         body: JSON.stringify(form),
       });
 
-      // ✅ evita el error "Unexpected token <"
-      const text = await res.text();
-      let data;
-      try {
-        data = JSON.parse(text);
-      } catch {
-        throw new Error(
-          "El backend no devolvió JSON. Revisa que el backend esté en http://localhost:4000 y exista /api/auth/login."
-        );
-      }
+      // 👇 evita el error cuando el backend devuelve HTML por ruta equivocada
+      const contentType = res.headers.get("content-type") || "";
+      const data = contentType.includes("application/json")
+        ? await res.json()
+        : { message: "Respuesta inválida del servidor (no es JSON)." };
 
       if (!res.ok) throw new Error(data.message || "Error");
 
@@ -46,30 +42,67 @@ export default function Login() {
   };
 
   return (
-    <div style={{ padding: "40px 30px", maxWidth: 420, margin: "0 auto" }}>
-      <h2>Acceso Administrador</h2>
+    <div className={styles.page}>
+      {/* fondo suave sin romper ancho */}
+      <div className={styles.bg} />
 
-      <form onSubmit={onSubmit} style={{ display: "grid", gap: 14 }}>
-        <input
-          name="username"
-          placeholder="Usuario"
-          value={form.username}
-          onChange={onChange}
-        />
-        <input
-          name="password"
-          type="password"
-          placeholder="Contraseña"
-          value={form.password}
-          onChange={onChange}
-        />
+      <main className={styles.main}>
+        <div className={styles.card}>
+          <div className={styles.avatar} aria-hidden="true">
+            {/* ícono user simple */}
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M20 21a8 8 0 0 0-16 0"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+              <path
+                d="M12 11a4 4 0 1 0-4-4 4 4 0 0 0 4 4Z"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
+            </svg>
+          </div>
 
-        <button type="submit" disabled={loading}>
-          {loading ? "Ingresando..." : "Ingresar"}
-        </button>
+          <h2 className={styles.title}>Bienvenido</h2>
+          <p className={styles.subtitle}>Ingresa tus credenciales para continuar.</p>
 
-        {error && <p style={{ color: "crimson" }}>{error}</p>}
-      </form>
+          <form onSubmit={onSubmit} className={styles.form}>
+            <label className={styles.label}>
+              Usuario
+              <input
+                className={styles.input}
+                name="username"
+                placeholder="Usuario"
+                value={form.username}
+                onChange={onChange}
+                autoComplete="username"
+              />
+            </label>
+
+            <label className={styles.label}>
+              Contraseña
+              <input
+                className={styles.input}
+                name="password"
+                type="password"
+                placeholder="Contraseña"
+                value={form.password}
+                onChange={onChange}
+                autoComplete="current-password"
+              />
+            </label>
+
+            <button className={styles.button} type="submit" disabled={loading}>
+              {loading ? "Ingresando..." : "Ingresar"}
+            </button>
+
+            {error && <p className={styles.error}>{error}</p>}
+          </form>
+        </div>
+      </main>
     </div>
   );
 }

@@ -7,6 +7,9 @@ export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // 🔒 Detectar si estamos en login
+  const isLoginPage = location.pathname === "/login";
+
   useEffect(() => {
     setOpen(false);
   }, [location.pathname]);
@@ -34,45 +37,67 @@ export default function Navbar() {
           AAC WEB
         </Link>
 
-        <div className="nav-links-desktop" style={styles.linksDesktop}>
-          <Link to="/" style={linkStyle(location.pathname === "/")}>Home</Link>
-          <Link to="/about" style={linkStyle(location.pathname === "/about")}>About</Link>
-          <Link to="/aprender" style={linkStyle(location.pathname === "/aprender")}>Aprender</Link>
+        {/* 🔒 Si estamos en login NO mostramos nada más */}
+        {!isLoginPage && (
+          <>
+            <div className="nav-links-desktop" style={styles.linksDesktop}>
+              <Link to="/" style={linkStyle(location.pathname === "/")}>
+                Home
+              </Link>
 
-          <button
-            onClick={goToContact}
-            style={{
-              background: "transparent",
-              border: "none",
-              padding: 0,
-              cursor: "pointer",
-              color: "white",
-              fontSize: "18px",
-              opacity: 0.85,
-              fontWeight: 500,
-            }}
-          >
-            Contact
-          </button>
-        </div>
+              <Link to="/about" style={linkStyle(location.pathname === "/about")}>
+                About
+              </Link>
 
-        <button
-          className="nav-burger"
-          onClick={() => setOpen((v) => !v)}
-          aria-label="Abrir menú"
-          style={styles.burgerBtn}
-        >
-          <span style={styles.burgerLine} />
-          <span style={styles.burgerLine} />
-          <span style={styles.burgerLine} />
-        </button>
+              <Link to="/aprender" style={linkStyle(location.pathname === "/aprender")}>
+                Aprender
+              </Link>
+
+              <button
+                onClick={goToContact}
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  padding: 0,
+                  cursor: "pointer",
+                  color: "white",
+                  fontSize: "18px",
+                  opacity: 0.85,
+                  fontWeight: 500,
+                }}
+              >
+                Contact
+              </button>
+            </div>
+
+            <button
+              className="nav-burger"
+              onClick={() => setOpen((v) => !v)}
+              aria-label="Abrir menú"
+              style={styles.burgerBtn}
+            >
+              <span style={styles.burgerLine} />
+              <span style={styles.burgerLine} />
+              <span style={styles.burgerLine} />
+            </button>
+          </>
+        )}
       </nav>
 
-      {open && (
+      {/* 🔒 Menú móvil solo si NO es login */}
+      {!isLoginPage && open && (
         <div className="nav-mobile-menu" style={styles.mobileMenu}>
-          <Link to="/" style={styles.mobileLink}>Home</Link>
-          <Link to="/about" style={styles.mobileLink}>About</Link>
-          <Link to="/aprender" style={styles.mobileLink}>Aprender</Link>
+          <Link to="/" style={styles.mobileLink}>
+            Home
+          </Link>
+
+          <Link to="/about" style={styles.mobileLink}>
+            About
+          </Link>
+
+          <Link to="/aprender" style={styles.mobileLink}>
+            Aprender
+          </Link>
 
           <button
             onClick={goToContact}

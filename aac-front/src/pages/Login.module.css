@@ -1,0 +1,134 @@
+.page {
+  width: 100%;
+  min-height: calc(100vh - 64px); /* navbar */
+  position: relative;
+  overflow-x: hidden; /* solo horizontal */
+  display: flex;
+  flex-direction: column; /* main arriba, footer abajo */
+}
+
+/* Fondo suave */
+.bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.bg::before,
+.bg::after {
+  content: "";
+  position: absolute;
+  width: 520px;
+  height: 520px;
+  border-radius: 999px;
+  filter: blur(55px);
+  opacity: 0.35;
+}
+
+.bg::before {
+  left: -220px;
+  top: 90px;
+  background: #9ee7ff;
+}
+
+.bg::after {
+  right: -240px;
+  top: 40px;
+  background: #ffe0a3;
+}
+
+/* ✅ main ya NO usa min-height, ahora ocupa el espacio libre */
+.main {
+  position: relative;
+  flex: 1;                 /* clave */
+  display: grid;
+  place-items: center;      /* centra el login */
+  padding: 16px;            /* ajusta si quieres */
+  box-sizing: border-box;
+}
+
+/* login card */
+.card {
+  width: min(520px, 92vw);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 18px;
+  padding: 26px 26px 22px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.10);
+  text-align: center;
+}
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  margin: 0 auto 10px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.06);
+  display: grid;
+  place-items: center;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.subtitle {
+  margin: 6px 0 18px;
+  font-size: 13px;
+  opacity: 0.7;
+}
+
+.form {
+  display: grid;
+  gap: 12px;
+  text-align: left;
+}
+
+.label {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  opacity: 0.92;
+}
+
+.input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  outline: none;
+}
+
+.input:focus {
+  border-color: rgba(0, 0, 0, 0.32);
+}
+
+.button {
+  margin-top: 6px;
+  width: 100%;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  background: #111;
+  color: white;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.error {
+  margin: 8px 0 0;
+  color: crimson;
+  font-size: 13px;
+  font-weight: 600;
+}
