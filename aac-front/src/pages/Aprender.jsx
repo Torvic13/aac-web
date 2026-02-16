@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import styles from "./Aprender.module.css";
 
 const modulesData = [
@@ -71,6 +71,42 @@ export default function Aprender() {
     return m.videos.find((v) => v.id === activeVideoId) || m.videos[0];
   }, [activeModuleId, activeVideoId]);
 
+  // =========================
+  // ✅ POPUP + TRACKING
+  // =========================
+  const [showWelcome, setShowWelcome] = useState(true);
+  const [pendingKey, setPendingKey] = useState(`aprender_${modulesData[0].id}`);
+  const sentKeysRef = useRef(new Set()); // evita duplicados si el usuario acepta varias veces sin cambiar módulo
+
+  // Cuando cambias de módulo, vuelve a mostrar popup y prepara key
+  useEffect(() => {
+    setPendingKey(`aprender_${activeModuleId}`);
+    setShowWelcome(true);
+  }, [activeModuleId]);
+
+  const sendAnalyticsEvent = async (key) => {
+    // evita duplicar el mismo key en la misma sesión si ya se envió
+    if (sentKeysRef.current.has(key)) return;
+
+    try {
+      await fetch("http://localhost:4000/api/analytics/event", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key }),
+      });
+
+      sentKeysRef.current.add(key);
+    } catch (e) {
+      // si falla no rompemos la UX; solo no cuenta
+      // console.log("No se pudo registrar analytics", e);
+    }
+  };
+
+  const acceptWelcome = async () => {
+    setShowWelcome(false);
+    await sendAnalyticsEvent(pendingKey);
+  };
+
   // Si cambias de módulo, selecciona el primer video de ese módulo
   const onSelectModule = (moduleId) => {
     setActiveModuleId(moduleId);
@@ -81,7 +117,7 @@ export default function Aprender() {
   return (
     <div className={styles.page}>
       {/* Banner */}
-      <section 
+      <section
         className={styles.banner}
         style={{ backgroundImage: `url("/img/banner.jpg")` }}
       >
@@ -95,6 +131,22 @@ export default function Aprender() {
         </div>
       </section>
 
+      {/* ✅ POPUP */}
+      {showWelcome && (
+        <div className={styles.modalBackdrop}>
+          <div className={styles.modalCard}>
+            <div className={styles.modalIcon}>👋</div>
+            <h3 className={styles.modalTitle}>¡Bienvenido!</h3>
+            <p className={styles.modalText}>
+              Estás ingresando a <strong>{activeModule?.title}</strong>.
+            </p>
+
+            <button className={styles.modalBtn} onClick={acceptWelcome}>
+              Aceptar
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Layout: sidebar + contenido */}
       <div className={styles.layout}>
@@ -107,7 +159,9 @@ export default function Aprender() {
               <button
                 key={m.id}
                 type="button"
-                className={`${styles.moduleBtn} ${m.id === activeModuleId ? styles.active : ""}`}
+                className={`${styles.moduleBtn} ${
+                  m.id === activeModuleId ? styles.active : ""
+                }`}
                 onClick={() => onSelectModule(m.id)}
               >
                 {m.title}
@@ -130,7 +184,9 @@ export default function Aprender() {
                 <button
                   key={v.id}
                   type="button"
-                  className={`${styles.videoItem} ${v.id === activeVideoId ? styles.videoActive : ""}`}
+                  className={`${styles.videoItem} ${
+                    v.id === activeVideoId ? styles.videoActive : ""
+                  }`}
                   onClick={() => setActiveVideoId(v.id)}
                 >
                   <span className={styles.videoIndex}>Video {idx + 1}</span>

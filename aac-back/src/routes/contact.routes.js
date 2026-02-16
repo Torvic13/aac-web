@@ -13,7 +13,7 @@ const router = Router();
 // Público (formulario landing)
 router.post("/contact", createContact);
 
-// Protegido (admin)
+// Protegido (admin) -> SOLO con JWT
 router.get("/contacts", requireAuth, getContacts);
 router.get("/contacts/:id", requireAuth, getContactById);
 router.patch("/contacts/:id", requireAuth, updateContact);

@@ -1,0 +1,198 @@
+.page {
+  padding: 26px 24px 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+
+.title {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 900;
+}
+
+.subtitle {
+  margin: 6px 0 0;
+  opacity: 0.75;
+}
+
+.topbarActions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.primaryBtn {
+  border: none;
+  border-radius: 12px;
+  padding: 10px 14px;
+  background: #111;
+  color: white;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.ghostBtn {
+  border: 1px solid rgba(0,0,0,0.10);
+  border-radius: 12px;
+  padding: 10px 14px;
+  background: white;
+  color: #111;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.ghostBtn:disabled,
+.primaryBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0 18px;
+}
+
+.tab {
+  border: 1px solid rgba(0,0,0,0.10);
+  background: white;
+  border-radius: 999px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-weight: 800;
+  opacity: 0.85;
+}
+
+.tabActive {
+  background: #111;
+  color: white;
+  border-color: #111;
+  opacity: 1;
+}
+
+/* ====== CONTACTS TAB ====== */
+
+.card {
+  background: white;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.cardTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.cardMeta {
+  margin: 6px 0 0;
+  opacity: 0.7;
+  font-size: 13px;
+}
+
+.searchWrap {
+  width: min(420px, 100%);
+}
+
+.search {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(0,0,0,0.12);
+  outline: none;
+  box-sizing: border-box;
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.table thead th {
+  text-align: left;
+  padding: 12px 10px;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  opacity: 0.8;
+  white-space: nowrap;
+}
+
+.table tbody td {
+  padding: 12px 10px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  vertical-align: top;
+}
+
+.tdStrong {
+  font-weight: 900;
+}
+
+.tdMessage {
+  max-width: 420px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.thRight {
+  text-align: right;
+}
+
+.tdRight {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.dangerBtn {
+  border: 1px solid rgba(220,20,60,0.25);
+  background: rgba(220,20,60,0.08);
+  color: crimson;
+  font-weight: 900;
+  padding: 8px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.error {
+  color: crimson;
+  font-weight: 800;
+  margin: 10px 0 0;
+}
+
+.empty {
+  margin: 10px 0 0;
+  opacity: 0.8;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .topbar {
+    flex-direction: column;
+  }
+
+  .tdMessage {
+    max-width: 260px;
+  }
+}
