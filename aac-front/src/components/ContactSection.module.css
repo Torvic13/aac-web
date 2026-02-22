@@ -11,7 +11,7 @@
 
 .contactImage {
   min-height: 360px;
-  background: rgba(0, 0, 0, 0.06);
+  background: white;
   border-radius: 16px;
   display: flex;
   align-items: center;
@@ -120,4 +120,11 @@
     transform: translateY(0);
     opacity: 1;
   }
+}
+.contactImg {
+  width: 100%;
+  max-width: 350px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
 }

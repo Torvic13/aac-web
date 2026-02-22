@@ -34,7 +34,7 @@ export default function Navbar() {
     <header style={styles.header}>
       <nav style={styles.nav}>
         <Link to="/" style={styles.brand}>
-          AAC WEB
+          Aprende, Ahorra & Crece
         </Link>
 
         {/* 🔒 Si estamos en login NO mostramos nada más */}

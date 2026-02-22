@@ -42,8 +42,7 @@ export default function Home() {
       <ImageCardSlider />
 
       <div className="home-content">
-        <h1>Bienvenido a AAC WEB</h1>
-        <p>Esta es tu página principal.</p>
+        <h1>Bienvenido a APREDNE, AHORRA Y CRECE</h1>
 
         <section className="cards-grid">
           {cards.map((c, idx) => (

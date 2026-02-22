@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
 const images = [
-  "/img/1.jpg",
-  "/img/2.jpg",
-  "/img/3.jpg",
+  "/img/1.png",
+  "/img/2.png",
+  "/img/3.png",
 ];
 export default function ImageCardSlider() {
   const [index, setIndex] = useState(0);

@@ -67,9 +67,7 @@ export default function ContactSection() {
       <div className={styles.contactGrid}>
         {/* Imagen lado izquierdo */}
         <div className={styles.contactImage}>
-          {/* Cuando quieras poner imagen real, descomenta esto: */}
-          {/* <img src="/img/tu-imagen.jpg" alt="Contacto" /> */}
-          <span>Imagen</span>
+          <img src="/img/LOGO.png" alt="Contacto" className={styles.contactImg} />
         </div>
 
         {/* Formulario */}
