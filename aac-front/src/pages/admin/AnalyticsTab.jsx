@@ -34,7 +34,7 @@ export default function AnalyticsTab({ logout }) {
     const token = getTokenOrLogout();
     if (!token) return;
 
-    const res = await fetch("http://localhost:4000/api/analytics/summary", {
+    const res = await fetch("https://aac-back.onrender.com/api/analytics/summary", {
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -55,7 +55,7 @@ export default function AnalyticsTab({ logout }) {
     if (moduleKey) qs.set("key", moduleKey);
 
     const res = await fetch(
-      `http://localhost:4000/api/analytics/timeseries?${qs.toString()}`,
+      `https://aac-back.onrender.com/api/analytics/timeseries?${qs.toString()}`,
       { headers: { Authorization: `Bearer ${token}` } }
     );
 

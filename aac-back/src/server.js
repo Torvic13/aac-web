@@ -55,5 +55,21 @@ async function start() {
     process.exit(1);
   }
 }
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://aac-web-self.vercel.app", // reemplaza por tu URL real
+];
+
+app.use(
+  cors({
+    origin(origin, callback) {
+      // permitir Postman/Insomnia (sin origin) y los origins de la lista
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("Not allowed by CORS"));
+    },
+  })
+);
 
 start();

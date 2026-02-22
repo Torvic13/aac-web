@@ -29,7 +29,7 @@ export default function ContactsTab({ styles, logout }) {
       setErrMsg("");
       setLoading(true);
 
-      const res = await fetch("http://localhost:4000/api/contacts", {
+      const res = await fetch("https://aac-back.onrender.com/api/contacts", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -61,7 +61,7 @@ export default function ContactsTab({ styles, logout }) {
       }
 
       try {
-        const res = await fetch(`http://localhost:4000/api/contacts/${id}`, {
+        const res = await fetch(`https://aac-back.onrender.com/api/contacts/${id}`, {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
         });
