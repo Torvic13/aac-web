@@ -20,11 +20,6 @@ export default function About() {
           Brindamos contenidos prácticos y dinámicos sobre ahorro, presupuesto y consumo responsable. 
           Usamos herramientas digitales para facilitar el aprendizaje aplicado a la vida diaria.
           </p>
-          <p>
-          Ser un referente en educación financiera juvenil a través de plataformas digitales. 
-          Formar jóvenes conscientes y preparados para manejar su dinero de manera responsable. 
-          Impulsar una educación inclusiva y de calidad mediante herramientas innovadoras.
-          </p>
         </div>
       </section>
 
