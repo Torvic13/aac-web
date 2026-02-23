@@ -4,13 +4,13 @@ import styles from "./Aprender.module.css";
 const modulesData = [
   {
     id: "m1",
-    title: "Módulo 1: Ahorro",
+    title: "Construyendo mi vida financiera",
     videos: [
       {
         id: "v1",
-        title: "¿Qué es ahorrar? (bases)",
-        youtubeId: "952ILTHDgC4",
-        duration: "6:12",
+        title: "Mi vida financiera empieza hoy",
+        youtubeId: "7IOpecA89nI",
+        duration: "1:16",
         description: "Aprende lo esencial para empezar a ahorrar desde hoy.",
       },
       {
