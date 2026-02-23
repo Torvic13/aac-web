@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Login.module.css";
 
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:4000/api";
+
 export default function Login() {
   const [form, setForm] = useState({ username: "", password: "" });
   const [error, setError] = useState("");
@@ -18,13 +20,16 @@ export default function Login() {
     try {
       setLoading(true);
 
-      const res = await fetch("https://aac-back.onrender.com/api/auth/login", {
+      const res = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          // 👇 AJUSTA ESTO A LO QUE ESPERA TU BACK
+          usuario: form.username,  // o email: form.username
+          password: form.password,
+        }),
       });
 
-      // 👇 evita el error cuando el backend devuelve HTML por ruta equivocada
       const contentType = res.headers.get("content-type") || "";
       const data = contentType.includes("application/json")
         ? await res.json()
@@ -43,13 +48,11 @@ export default function Login() {
 
   return (
     <div className={styles.page}>
-      {/* fondo suave sin romper ancho */}
       <div className={styles.bg} />
 
       <main className={styles.main}>
         <div className={styles.card}>
           <div className={styles.avatar} aria-hidden="true">
-            {/* ícono user simple */}
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
               <path
                 d="M20 21a8 8 0 0 0-16 0"
@@ -67,7 +70,9 @@ export default function Login() {
           </div>
 
           <h2 className={styles.title}>Bienvenido</h2>
-          <p className={styles.subtitle}>Ingresa tus credenciales para continuar.</p>
+          <p className={styles.subtitle}>
+            Ingresa tus credenciales para continuar.
+          </p>
 
           <form onSubmit={onSubmit} className={styles.form}>
             <label className={styles.label}>
