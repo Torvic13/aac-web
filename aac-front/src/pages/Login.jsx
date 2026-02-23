@@ -2,7 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./Login.module.css";
 
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:4000/api";
+// 👇 base de la API: prod -> Render, dev -> localhost
+const API_URL =
+  process.env.NODE_ENV === "production"
+    ? "https://aac-back.onrender.com/api"
+    : "http://localhost:4000/api";
 
 export default function Login() {
   const [form, setForm] = useState({ username: "", password: "" });
@@ -24,8 +28,8 @@ export default function Login() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          // 👇 AJUSTA ESTO A LO QUE ESPERA TU BACK
-          usuario: form.username,  // o email: form.username
+          // 👈 AHORA COINCIDE CON TU auth.routes.js
+          username: form.username,
           password: form.password,
         }),
       });
@@ -35,12 +39,16 @@ export default function Login() {
         ? await res.json()
         : { message: "Respuesta inválida del servidor (no es JSON)." };
 
-      if (!res.ok) throw new Error(data.message || "Error");
+      if (!res.ok) {
+        throw new Error(data.message || "No se pudo iniciar sesión");
+      }
 
+      // guarda token y pasa a admin
       localStorage.setItem("token", data.token);
       navigate("/admin");
     } catch (err) {
-      setError(err.message || "No se pudo iniciar sesión");
+      console.error(err);
+      setError(err.message || "Failed to fetch");
     } finally {
       setLoading(false);
     }
