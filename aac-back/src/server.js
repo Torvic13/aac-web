@@ -9,7 +9,7 @@ import analyticsRoutes from "./routes/analytics.routes.js";
 
 const app = express();
 
-// Validaciones de ENV
+/* -----------------------  VALIDACIÓN DE ENV  ----------------------- */
 if (!process.env.MONGO_URI) {
   console.error("❌ Falta MONGO_URI en .env");
   process.exit(1);
@@ -19,27 +19,42 @@ if (!process.env.JWT_SECRET) {
   process.exit(1);
 }
 
-// Middlewares
+/* -----------------------  CONFIGURACIÓN DE CORS  ----------------------- */
+
+// ⬅️ CAMBIA ESTE dominio por el EXACTO DE TU VERCEL
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://aac-web-self.vercel.app", 
+  // ejemplo: "https://aac-web.vercel.app"
+];
+
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin(origin, callback) {
+      // Permitir Insomnia/Postman (sin origin) y los origins permitidos
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("❌ CORS bloqueó la petición"));
+    },
     credentials: true,
   })
 );
 
+/* -----------------------  MIDDLEWARES  ----------------------- */
 app.use(express.json());
 
-// Health
+/* -----------------------  HEALTH CHECK  ----------------------- */
 app.get("/api/health", (req, res) => {
   res.json({ ok: true, message: "Backend AAC WEB funcionando ✅" });
 });
 
-// Routes
+/* -----------------------  RUTAS  ----------------------- */
 app.use("/api/auth", authRoutes);
 app.use("/api", contactRoutes);
 app.use("/api", analyticsRoutes);
 
-// Mongo + Start Server
+/* -----------------------  MONGO + START SERVER  ----------------------- */
 const PORT = process.env.PORT || 4000;
 
 async function start() {
@@ -51,25 +66,9 @@ async function start() {
       console.log(`✅ Backend corriendo en http://localhost:${PORT}`);
     });
   } catch (error) {
-    console.error("❌ Error conectando MongoDB:", error.message);
+    console.error("❌ Error conectando a MongoDB:", error.message);
     process.exit(1);
   }
 }
-const allowedOrigins = [
-  "http://localhost:3000",
-  "https://aac-web-self.vercel.app", // reemplaza por tu URL real
-];
-
-app.use(
-  cors({
-    origin(origin, callback) {
-      // permitir Postman/Insomnia (sin origin) y los origins de la lista
-      if (!origin || allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-      return callback(new Error("Not allowed by CORS"));
-    },
-  })
-);
 
 start();
