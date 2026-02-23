@@ -8,7 +8,7 @@ export default function ProtectedRoute({ children }) {
     const token = localStorage.getItem("token");
     if (!token) return setOk(false);
 
-    fetch("http://localhost:4000/api/auth/me", {
+    fetch("https://aac-back.onrender.com/api/auth/me", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((r) => setOk(r.ok))
