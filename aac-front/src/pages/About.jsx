@@ -16,6 +16,11 @@ export default function About() {
         <div className={styles.boxText}>
           <h2>¿Quiénes somos?</h2>
           <p>
+          Somos un proyecto educativo digital que promueve la educación financiera en jóvenes de 15 a 18 años. 
+          Brindamos contenidos prácticos y dinámicos sobre ahorro, presupuesto y consumo responsable. 
+          Usamos herramientas digitales para facilitar el aprendizaje aplicado a la vida diaria.
+          </p>
+          <p>
           Ser un referente en educación financiera juvenil a través de plataformas digitales. 
           Formar jóvenes conscientes y preparados para manejar su dinero de manera responsable. 
           Impulsar una educación inclusiva y de calidad mediante herramientas innovadoras.
@@ -28,9 +33,9 @@ export default function About() {
         <div className={styles.boxText}>
           <h2>Nuestra misión</h2>
           <p>
-          Somos un proyecto educativo digital que promueve la educación financiera en jóvenes de 15 a 18 años. 
-          Brindamos contenidos prácticos y dinámicos sobre ahorro, presupuesto y consumo responsable. 
-          Usamos herramientas digitales para facilitar el aprendizaje aplicado a la vida diaria.
+          Ser un referente en educación financiera juvenil a través de plataformas digitales. 
+          Formar jóvenes conscientes y preparados para manejar su dinero de manera responsable. 
+          Impulsar una educación inclusiva y de calidad mediante herramientas innovadoras.
           </p>
         </div>
 

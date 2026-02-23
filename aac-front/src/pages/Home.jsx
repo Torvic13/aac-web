@@ -42,7 +42,7 @@ export default function Home() {
       <ImageCardSlider />
 
       <div className="home-content">
-        <h1>Bienvenido a APREDNE, AHORRA Y CRECE</h1>
+        <h1>Bienvenido a APRENDE, AHORRA Y CRECE</h1>
 
         <section className="cards-grid">
           {cards.map((c, idx) => (
