@@ -1,25 +1,17 @@
 import { Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-const API_URL =
-  process.env.REACT_APP_API_URL || "http://localhost:4000/api";
-
 export default function ProtectedRoute({ children }) {
-  const [ok, setOk] = useState(null); // null = cargando
+  const [ok, setOk] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) {
-      setOk(false);
-      return;
-    }
+    if (!token) return setOk(false);
 
-    fetch(`${API_URL}/auth/me`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    fetch("https://aac-back.onrender.com/api/auth/me", {
+      headers: { Authorization: `Bearer ${token}` },
     })
-      .then((r) => setOk(r.ok)) // true si 2xx, false si 401/500/etc.
+      .then((r) => setOk(r.ok))
       .catch(() => setOk(false));
   }, []);
 
