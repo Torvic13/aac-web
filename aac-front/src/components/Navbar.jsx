@@ -46,7 +46,7 @@ export default function Navbar() {
               </Link>
 
               <Link to="/about" style={linkStyle(location.pathname === "/about")}>
-                About
+                Nostros
               </Link>
 
               <Link to="/aprender" style={linkStyle(location.pathname === "/aprender")}>
@@ -92,7 +92,7 @@ export default function Navbar() {
           </Link>
 
           <Link to="/about" style={styles.mobileLink}>
-            About
+            Nostros
           </Link>
 
           <Link to="/aprender" style={styles.mobileLink}>
