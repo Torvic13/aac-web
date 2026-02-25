@@ -47,16 +47,19 @@
 
 /* Layout spans */
 .span2 { grid-column: span 8; }
-.span1 { grid-column: span 4; }
 
 /* KPIs */
 .kpi {
-  grid-column: span 4;
   background: white;
   border: 1px solid rgba(0,0,0,0.08);
   border-radius: 16px;
   padding: 16px;
   box-shadow: 0 10px 24px rgba(0,0,0,0.06);
+}
+
+/* ✅ fuerza que TODO KPI vaya a la columna derecha (como tu 2da imagen) */
+.spanRight {
+  grid-column: 9 / span 4; /* columnas 9-12 */
 }
 
 .kpiLabel {
@@ -70,12 +73,6 @@
   margin: 10px 0 2px;
   font-size: 28px;
   font-weight: 1000;
-}
-
-.kpiHint {
-  margin: 0;
-  opacity: 0.65;
-  font-size: 12px;
 }
 
 /* Controls */
@@ -158,11 +155,7 @@
   opacity: 0.75;
 }
 
-/* Responsive */
-@media (max-width: 900px) {
-  .kpi { grid-column: span 12; }
-  .span2, .span1 { grid-column: span 12; }
-}
+/* Top actions */
 .topbarActions {
   display: flex;
   gap: 10px;
@@ -182,4 +175,10 @@
 .ghostBtn:disabled {
   opacity: 0.7;
   cursor: not-allowed;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .span2 { grid-column: span 12; }
+  .spanRight { grid-column: span 12; }
 }
