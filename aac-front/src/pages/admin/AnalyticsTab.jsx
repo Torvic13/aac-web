@@ -1,6 +1,8 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
 import styles from "./AnalyticsTab.module.css";
 
+const EVENTS_PER_PERSON = 3; // 👈 3 eventos = 1 persona (aprox)
+
 export default function AnalyticsTab({ logout }) {
   const [loadingSummary, setLoadingSummary] = useState(true);
   const [loadingChart, setLoadingChart] = useState(true);
@@ -10,7 +12,7 @@ export default function AnalyticsTab({ logout }) {
 
   const [range, setRange] = useState("day");
   const [moduleKey, setModuleKey] = useState("");
-  const [series, setSeries] = useState({ labels: [], values: [] });
+  const [series, setSeries] = useState({ labels: [], values: [] }); // values = PERSONAS
 
   const safeJson = async (res) => {
     const text = await res.text();
@@ -34,9 +36,12 @@ export default function AnalyticsTab({ logout }) {
     const token = getTokenOrLogout();
     if (!token) return;
 
-    const res = await fetch("https://aac-back.onrender.com/api/analytics/summary", {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const res = await fetch(
+      "https://aac-back.onrender.com/api/analytics/summary",
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
 
     if (res.status === 401) return logout();
 
@@ -64,15 +69,18 @@ export default function AnalyticsTab({ logout }) {
     const data = await safeJson(res);
     if (!res.ok) throw new Error(data.message || "Error cargando gráfico");
 
-   const EVENTS_PER_PERSON = 3;
+    // data.values llega en EVENTOS por bucket -> lo convertimos a PERSONAS
+    const labels = Array.isArray(data.labels) ? data.labels : [];
+    const eventValues = Array.isArray(data.values) ? data.values : [];
+
+    const personValues = eventValues.map((v) =>
+      Math.ceil((Number(v) || 0) / EVENTS_PER_PERSON)
+    );
 
     setSeries({
-    labels: Array.isArray(data.labels) ? data.labels : [],
-    values: (Array.isArray(data.values) ? data.values : []).map((v) =>
-        Math.ceil((Number(v) || 0) / EVENTS_PER_PERSON)
-    ),
+      labels,
+      values: personValues, // 👈 ahora el gráfico usa "personas"
     });
-
   }, [logout, getTokenOrLogout, range, moduleKey]);
 
   const refreshAll = useCallback(async () => {
@@ -107,10 +115,7 @@ export default function AnalyticsTab({ logout }) {
     })();
   }, [range, moduleKey, loadSeries]);
 
-  // ... abajo sigue tu render tal cual
-
-
-  // KPIs (eventos)
+  // --- KPIs (eventos crudos) ---
   const counts = useMemo(() => summary?.byKey || {}, [summary]);
   const m1 = counts["aprender_m1"] || 0;
   const m2 = counts["aprender_m2"] || 0;
@@ -118,7 +123,7 @@ export default function AnalyticsTab({ logout }) {
   const totalEvents =
     typeof summary?.total === "number" ? summary.total : m1 + m2 + m3;
 
-  // “personas” (estimado) del periodo actual = suma de buckets
+  // Personas (estimado) en el rango actual = suma de valores del gráfico
   const peopleInRange = useMemo(
     () => (series.values || []).reduce((a, b) => a + (Number(b) || 0), 0),
     [series.values]
@@ -134,7 +139,7 @@ export default function AnalyticsTab({ logout }) {
           <div>
             <h2 className={styles.cardTitle}>Analytics</h2>
             <p className={styles.cardMeta}>
-              Gráfico = <b>personas únicas</b> por{" "}
+              Gráfico = <b>personas únicas (estimadas)</b> por{" "}
               {range === "day" ? "día" : range === "week" ? "semana" : "mes"}
               {moduleKey ? ` (solo ${moduleKey})` : " (todos los módulos)"}
             </p>
@@ -192,13 +197,13 @@ export default function AnalyticsTab({ logout }) {
           ) : (
             <div className={styles.bars}>
               {series.labels.map((lab, i) => {
-                const v = series.values[i] || 0;
+                const v = series.values[i] || 0; // v = PERSONAS
                 const h = Math.round((v / maxVal) * 100);
                 return (
                   <div
                     key={lab + i}
                     className={styles.barItem}
-                    title={`${lab}: ${v} personas`}
+                    title={`${lab}: ${v} personas (estimadas)`}
                   >
                     <div className={styles.bar} style={{ height: `${h}%` }} />
                     <span className={styles.barLabel}>{lab}</span>
