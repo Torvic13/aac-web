@@ -76,10 +76,7 @@ export default function AnalyticsTab({ logout }) {
       ? data.values.map((v) => Number(v) || 0)
       : [];
 
-    const persons = rawEvents.map((v) =>
-      Math.floor(v / EVENTS_PER_PERSON)
-    );
-
+    const persons = rawEvents.map((v) => Math.floor(v / EVENTS_PER_PERSON));
     setSeries({ labels, persons });
   }, [logout, getTokenOrLogout, range, moduleKey]);
 
@@ -203,11 +200,7 @@ export default function AnalyticsTab({ logout }) {
                 const h = Math.round((persons / maxVal) * 100);
 
                 return (
-                  <div
-                    key={lab + i}
-                    className={styles.barItem}
-                    title={`${lab}: ${persons} personas`}
-                  >
+                  <div key={lab + i} className={styles.barItem}>
                     <div className={styles.bar} style={{ height: `${h}%` }} />
                     <span className={styles.barLabel}>{lab}</span>
                     {/* ✅ SOLO PERSONAS */}
@@ -220,26 +213,30 @@ export default function AnalyticsTab({ logout }) {
         </div>
       </div>
 
-      {/* DERECHA: columna con 4 tarjetas */}
-      <div className={`${styles.kpi} ${styles.spanRight}`}>
-        <p className={styles.kpiLabel}>Total personas (histórico)</p>
-        <p className={styles.kpiValue}>{loadingSummary ? "..." : totalPersons}</p>
-      </div>
+      {/* ✅ DERECHA: UN SOLO CONTENEDOR */}
+      <aside className={`${styles.card} ${styles.spanRight}`}>
+        <div className={styles.kpiStack}>
+          <div className={styles.kpiBox}>
+            <p className={styles.kpiLabel}>Total personas (histórico)</p>
+            <p className={styles.kpiValue}>{loadingSummary ? "..." : totalPersons}</p>
+          </div>
 
-      <div className={`${styles.kpi} ${styles.spanRight}`}>
-        <p className={styles.kpiLabel}>Módulo 1 (personas)</p>
-        <p className={styles.kpiValue}>{loadingSummary ? "..." : m1Persons}</p>
-      </div>
+          <div className={styles.kpiBox}>
+            <p className={styles.kpiLabel}>Módulo 1 (personas)</p>
+            <p className={styles.kpiValue}>{loadingSummary ? "..." : m1Persons}</p>
+          </div>
 
-      <div className={`${styles.kpi} ${styles.spanRight}`}>
-        <p className={styles.kpiLabel}>Módulo 2 (personas)</p>
-        <p className={styles.kpiValue}>{loadingSummary ? "..." : m2Persons}</p>
-      </div>
+          <div className={styles.kpiBox}>
+            <p className={styles.kpiLabel}>Módulo 2 (personas)</p>
+            <p className={styles.kpiValue}>{loadingSummary ? "..." : m2Persons}</p>
+          </div>
 
-      <div className={`${styles.kpi} ${styles.spanRight}`}>
-        <p className={styles.kpiLabel}>Módulo 3 (personas)</p>
-        <p className={styles.kpiValue}>{loadingSummary ? "..." : m3Persons}</p>
-      </div>
+          <div className={styles.kpiBox}>
+            <p className={styles.kpiLabel}>Módulo 3 (personas)</p>
+            <p className={styles.kpiValue}>{loadingSummary ? "..." : m3Persons}</p>
+          </div>
+        </div>
+      </aside>
     </section>
   );
 }

@@ -48,18 +48,23 @@
 /* Layout spans */
 .span2 { grid-column: span 8; }
 
-/* KPIs */
-.kpi {
+/* ✅ RIGHT COLUMN CONTAINER */
+.spanRight { grid-column: 9 / span 4; }
+
+/* ✅ KPI STACK INSIDE RIGHT CONTAINER */
+.kpiStack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ✅ KPI BOX (looks like your old kpi cards, but inside the container) */
+.kpiBox {
   background: white;
   border: 1px solid rgba(0,0,0,0.08);
   border-radius: 16px;
   padding: 16px;
   box-shadow: 0 10px 24px rgba(0,0,0,0.06);
-}
-
-/* ✅ fuerza que TODO KPI vaya a la columna derecha (como tu 2da imagen) */
-.spanRight {
-  grid-column: 9 / span 4; /* columnas 9-12 */
 }
 
 .kpiLabel {
@@ -155,7 +160,13 @@
   opacity: 0.75;
 }
 
-/* Top actions */
+/* Responsive */
+@media (max-width: 900px) {
+  .span2 { grid-column: span 12; }
+  .spanRight { grid-column: span 12; }
+}
+
+/* Buttons */
 .topbarActions {
   display: flex;
   gap: 10px;
@@ -175,10 +186,4 @@
 .ghostBtn:disabled {
   opacity: 0.7;
   cursor: not-allowed;
-}
-
-/* Responsive */
-@media (max-width: 900px) {
-  .span2 { grid-column: span 12; }
-  .spanRight { grid-column: span 12; }
 }
