@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useMemo } from "react";
 import styles from "./AnalyticsTab.module.css";
 
-const EVENTS_PER_PERSON = 3; // 👈 3 eventos = 1 persona (aprox)
+const EVENTS_PER_PERSON = 3; // 👈 3 eventos (m1+m2+m3) = 1 persona
 
 export default function AnalyticsTab({ logout }) {
   const [loadingSummary, setLoadingSummary] = useState(true);
@@ -69,17 +69,18 @@ export default function AnalyticsTab({ logout }) {
     const data = await safeJson(res);
     if (!res.ok) throw new Error(data.message || "Error cargando gráfico");
 
-    // data.values llega en EVENTOS por bucket -> lo convertimos a PERSONAS
+    // data.values = EVENTOS por bucket  -> convertir a PERSONAS por bucket
     const labels = Array.isArray(data.labels) ? data.labels : [];
     const eventValues = Array.isArray(data.values) ? data.values : [];
 
     const personValues = eventValues.map((v) =>
-      Math.ceil((Number(v) || 0) / EVENTS_PER_PERSON)
+      // ⬇⬇⬇ AQUÍ ESTÁ LA LÓGICA QUE PEDISTE
+      Math.floor((Number(v) || 0) / EVENTS_PER_PERSON)
     );
 
     setSeries({
       labels,
-      values: personValues, // 👈 ahora el gráfico usa "personas"
+      values: personValues, // gráfico trabaja en PERSONAS
     });
   }, [logout, getTokenOrLogout, range, moduleKey]);
 
@@ -115,7 +116,7 @@ export default function AnalyticsTab({ logout }) {
     })();
   }, [range, moduleKey, loadSeries]);
 
-  // --- KPIs (eventos crudos) ---
+  // --- KPIs (EVENTOS crudos del summary) ---
   const counts = useMemo(() => summary?.byKey || {}, [summary]);
   const m1 = counts["aprender_m1"] || 0;
   const m2 = counts["aprender_m2"] || 0;
@@ -123,7 +124,7 @@ export default function AnalyticsTab({ logout }) {
   const totalEvents =
     typeof summary?.total === "number" ? summary.total : m1 + m2 + m3;
 
-  // Personas (estimado) en el rango actual = suma de valores del gráfico
+  // Personas (estimado) en el rango actual = suma de los valores del gráfico
   const peopleInRange = useMemo(
     () => (series.values || []).reduce((a, b) => a + (Number(b) || 0), 0),
     [series.values]
@@ -141,7 +142,10 @@ export default function AnalyticsTab({ logout }) {
             <p className={styles.cardMeta}>
               Gráfico = <b>personas únicas (estimadas)</b> por{" "}
               {range === "day" ? "día" : range === "week" ? "semana" : "mes"}
-              {moduleKey ? ` (solo ${moduleKey})` : " (todos los módulos)"}
+              {moduleKey ? ` (solo ${moduleKey})` : " (todos los módulos)"}.
+              <br />
+              Se considera 1 persona cada {EVENTS_PER_PERSON} popups aceptados
+              (redondeando hacia abajo).
             </p>
           </div>
 
@@ -197,7 +201,7 @@ export default function AnalyticsTab({ logout }) {
           ) : (
             <div className={styles.bars}>
               {series.labels.map((lab, i) => {
-                const v = series.values[i] || 0; // v = PERSONAS
+                const v = series.values[i] || 0; // v = PERSONAS en ese bucket
                 const h = Math.round((v / maxVal) * 100);
                 return (
                   <div
@@ -220,7 +224,9 @@ export default function AnalyticsTab({ logout }) {
       <div className={styles.kpi}>
         <p className={styles.kpiLabel}>Personas en este rango</p>
         <p className={styles.kpiValue}>{loadingChart ? "..." : peopleInRange}</p>
-        <p className={styles.kpiHint}>Únicas por bucket (estimado)</p>
+        <p className={styles.kpiHint}>
+          Únicas por bucket (estimado = eventos ÷ {EVENTS_PER_PERSON}, redondeado hacia abajo)
+        </p>
       </div>
 
       <div className={styles.kpi}>
