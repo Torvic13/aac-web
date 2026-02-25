@@ -81,8 +81,9 @@ export default function AnalyticsTab({ logout }) {
       ? data.values.map((v) => Number(v) || 0)
       : [];
 
+    // personas por bucket = floor(eventos / 3)
     const persons = rawEvents.map((v) =>
-      Math.floor(v / EVENTS_PER_PERSON) // 👈 AQUÍ: eventos -> personas
+      Math.floor(v / EVENTS_PER_PERSON)
     );
 
     setSeries({
@@ -124,40 +125,39 @@ export default function AnalyticsTab({ logout }) {
     })();
   }, [range, moduleKey, loadSeries]);
 
-  // --- KPIs (EVENTOS crudos del summary, igual que antes) ---
+  // --- KPIs (EVENTOS crudos del summary) ---
   const counts = useMemo(() => summary?.byKey || {}, [summary]);
-  const m1 = counts["aprender_m1"] || 0;
-  const m2 = counts["aprender_m2"] || 0;
-  const m3 = counts["aprender_m3"] || 0;
+  const m1Events = counts["aprender_m1"] || 0;
+  const m2Events = counts["aprender_m2"] || 0;
+  const m3Events = counts["aprender_m3"] || 0;
   const totalEvents =
-    typeof summary?.total === "number" ? summary.total : m1 + m2 + m3;
+    typeof summary?.total === "number"
+      ? summary.total
+      : m1Events + m2Events + m3Events;
 
-  // Eventos totales SOLO del rango actual (lo que se ve en el gráfico)
-  const totalEventsInRange = useMemo(
-    () => (series.events || []).reduce((a, b) => a + (Number(b) || 0), 0),
-    [series.events]
-  );
+  // Personas históricas por módulo y total
+  const totalPersons = Math.floor(totalEvents / EVENTS_PER_PERSON);
+  const m1Persons = Math.floor(m1Events / EVENTS_PER_PERSON);
+  const m2Persons = Math.floor(m2Events / EVENTS_PER_PERSON);
+  const m3Persons = Math.floor(m3Events / EVENTS_PER_PERSON);
 
-  // Personas en el rango = floor( sumaEventosRango / 3 )
-  const peopleInRange = Math.floor(totalEventsInRange / EVENTS_PER_PERSON);
-
-  // Para altura de barras usar personas
+  // Para altura de barras usar personas del rango
   const maxVal = Math.max(1, ...(series.persons || []));
 
   return (
     <section className={styles.grid}>
-      {/* Card grande */}
+      {/* Card grande izquierda: filtros + gráfico */}
       <div className={`${styles.card} ${styles.span2}`}>
         <div className={styles.cardHeader}>
           <div>
             <h2 className={styles.cardTitle}>Analytics</h2>
             <p className={styles.cardMeta}>
-              Gráfico = <b>personas únicas (estimadas)</b> por{" "}
+              Gráfico = <b>personas (estimadas)</b> por{" "}
               {range === "day" ? "día" : range === "week" ? "semana" : "mes"}
               {moduleKey ? ` (solo ${moduleKey})` : " (todos los módulos)"}.
               <br />
-              Se considera 1 persona cada {EVENTS_PER_PERSON} popups aceptados
-              (redondeando hacia abajo).
+              Cada barra se calcula como: eventos del periodo ÷{" "}
+              {EVENTS_PER_PERSON}, redondeado hacia abajo.
             </p>
           </div>
 
@@ -213,20 +213,22 @@ export default function AnalyticsTab({ logout }) {
           ) : (
             <div className={styles.bars}>
               {series.labels.map((lab, i) => {
-                // personas por bucket (ya redondeado hacia abajo)
-                const persons = series.persons[i] || 0;
+                const events = series.events[i] || 0;   // popups en esa semana
+                const persons = series.persons[i] || 0; // personas = floor(events/3)
                 const h = Math.round((persons / maxVal) * 100);
 
                 return (
                   <div
                     key={lab + i}
                     className={styles.barItem}
-                    title={`${lab}: ${persons} personas (estimadas)`}
+                    title={`${lab}: ${events} popups → ${persons} personas (estimadas)`}
                   >
                     <div className={styles.bar} style={{ height: `${h}%` }} />
                     <span className={styles.barLabel}>{lab}</span>
-                    {/* 👇 aquí ya NO es 11 ni 7, es 3, 2, etc. */}
-                    <span className={styles.barValue}>{persons}</span>
+                    {/* 👇 eje x: "popups → personas", ej: "11 → 3" */}
+                    <span className={styles.barValue}>
+                      {events} → {persons}
+                    </span>
                   </div>
                 );
               })}
@@ -235,39 +237,39 @@ export default function AnalyticsTab({ logout }) {
         </div>
       </div>
 
-      {/* KPIs */}
+      {/* COLUMNA DERECHA: 4 tarjetas */}
       <div className={styles.kpi}>
-        <p className={styles.kpiLabel}>Personas en este rango</p>
-        {/* 👇 aquí será floor( (11+7) / 3 ) = 6, etc */}
-        <p className={styles.kpiValue}>{loadingChart ? "..." : peopleInRange}</p>
+        <p className={styles.kpiLabel}>Total personas (histórico)</p>
+        <p className={styles.kpiValue}>
+          {loadingSummary ? "..." : totalPersons}
+        </p>
         <p className={styles.kpiHint}>
-          Estimado global = eventos del rango ÷ {EVENTS_PER_PERSON}, redondeado
-          hacia abajo.
+          {loadingSummary ? "" : `${totalEvents} popups en total ÷ ${EVENTS_PER_PERSON}`}
         </p>
       </div>
 
       <div className={styles.kpi}>
-        <p className={styles.kpiLabel}>Eventos totales</p>
-        <p className={styles.kpiValue}>{loadingSummary ? "..." : totalEvents}</p>
-        <p className={styles.kpiHint}>Suma de popups aceptados (histórico)</p>
+        <p className={styles.kpiLabel}>Módulo 1 (personas)</p>
+        <p className={styles.kpiValue}>{loadingSummary ? "..." : m1Persons}</p>
+        <p className={styles.kpiHint}>
+          {loadingSummary ? "" : `${m1Events} popups en Módulo 1`}
+        </p>
       </div>
 
       <div className={styles.kpi}>
-        <p className={styles.kpiLabel}>Módulo 1 (eventos)</p>
-        <p className={styles.kpiValue}>{loadingSummary ? "..." : m1}</p>
-        <p className={styles.kpiHint}>aprender_m1</p>
+        <p className={styles.kpiLabel}>Módulo 2 (personas)</p>
+        <p className={styles.kpiValue}>{loadingSummary ? "..." : m2Persons}</p>
+        <p className={styles.kpiHint}>
+          {loadingSummary ? "" : `${m2Events} popups en Módulo 2`}
+        </p>
       </div>
 
       <div className={styles.kpi}>
-        <p className={styles.kpiLabel}>Módulo 2 (eventos)</p>
-        <p className={styles.kpiValue}>{loadingSummary ? "..." : m2}</p>
-        <p className={styles.kpiHint}>aprender_m2</p>
-      </div>
-
-      <div className={styles.kpi}>
-        <p className={styles.kpiLabel}>Módulo 3 (eventos)</p>
-        <p className={styles.kpiValue}>{loadingSummary ? "..." : m3}</p>
-        <p className={styles.kpiHint}>aprender_m3</p>
+        <p className={styles.kpiLabel}>Módulo 3 (personas)</p>
+        <p className={styles.kpiValue}>{loadingSummary ? "..." : m3Persons}</p>
+        <p className={styles.kpiHint}>
+          {loadingSummary ? "" : `${m3Events} popups en Módulo 3`}
+        </p>
       </div>
     </section>
   );
